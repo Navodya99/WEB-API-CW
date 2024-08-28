@@ -11,7 +11,25 @@ const trainSchema = new mongoose.Schema({
    enum: ["Main Line", "Puttalam Line", "Coastal Line", "Kalaniwali Line"],
    required: true,
  },
-  status: {
+ currentStation: {
+   type: mongoose.Schema.Types.ObjectId,
+   ref: "Station",
+   required: true,
+ },
+ lastPassedTime: {
+   type: Date,
+   required: true,
+ },
+ passedStations: [
+   {
+     station: {
+       type: mongoose.Schema.Types.ObjectId,
+       ref: "Station",
+     },
+     time: Date,
+   },
+ ],
+ status: {
    type: String,
    enum: ["Running", "Stopped"],
    default: "Running",
@@ -20,5 +38,3 @@ const trainSchema = new mongoose.Schema({
 
 
 module.exports = mongoose.model("Train", trainSchema);
-
-
