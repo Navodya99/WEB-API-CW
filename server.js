@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const trainRoutes = require("./Routes/trainRoutes");
 
 // Initialize dotenv to load environment variables
 dotenv.config();
@@ -29,6 +30,9 @@ app.use(express.json());
 
 // Connect to the database
 connectDB();
+
+// Routes
+app.use("/api/trains", trainRoutes);
 
 // Start the server
 app.listen(PORT, () => {
