@@ -2,12 +2,15 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const trainRoutes = require("./Routes/trainRoutes");
+const stationRoutes = require("./Routes/stationRoutes");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocs = require("./config/swaggerConfig");
 
 // Initialize dotenv to load environment variables
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8090;
 const cors = require("cors");
 app.use(cors());
 
@@ -32,7 +35,9 @@ app.use(express.json());
 connectDB();
 
 // Routes
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use("/api/trains", trainRoutes);
+app.use("/api/stations", stationRoutes);
 
 // Start the server
 app.listen(PORT, () => {

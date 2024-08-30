@@ -1,73 +1,133 @@
 const express = require("express");
 const router = express.Router();
-const Station = require("../Models/Station");
+const stationController = require("../Controllers/stationController");
 
-// Get all stations
-router.get("/", async (req, res) => {
-  try {
-    const stations = await Station.find();
-    res.json(stations);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
+/**
+ * @swagger
+ * tags:
+ *   name: Stations
+ *   description: The stations managing API
+ */
 
-// Get a specific station by ID
-router.get("/:id", async (req, res) => {
-  try {
-    const station = await Station.findById(req.params.id);
-    if (!station) return res.status(404).json({ message: "Station not found" });
-    res.json(station);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
+/**
+ * @swagger
+ * /api/stations:
+ *   get:
+ *     summary: Returns the list of all stations
+ *     tags: [Stations]
+ *     responses:
+ *       200:
+ *         description: The list of the stations
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Station'
+ */
+router.get("/", stationController.getAllStations);
 
-// Create a new station
-router.post("/", async (req, res) => {
-  const { name, distanceFromFort, line, latitude, longitude } = req.body;
+/**
+ * @swagger
+ * /api/stations/{id}:
+ *   get:
+ *     summary: Get a station by ID
+ *     tags: [Stations]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The station ID
+ *     responses:
+ *       200:
+ *         description: The station description by ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Station'
+ *       404:
+ *         description: Station not found
+ */
+router.get("/:id", stationController.getStationById);
 
-  const station = new Station({
-    name,
-    distanceFromFort,
-    line,
-    latitude,
-    longitude,
-  });
+/**
+ * @swagger
+ * /api/stations:
+ *   post:
+ *     summary: Create a new station
+ *     tags: [Stations]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Station'
+ *     responses:
+ *       201:
+ *         description: The station was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Station'
+ *       400:
+ *         description: Bad request
+ */
+router.post("/", stationController.createStation);
 
-  try {
-    const newStation = await station.save();
-    res.status(201).json(newStation);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
+/**
+ * @swagger
+ * /api/stations/{id}:
+ *   put:
+ *     summary: Update a station by ID
+ *     tags: [Stations]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The station ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Station'
+ *     responses:
+ *       200:
+ *         description: The station was updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Station'
+ *       404:
+ *         description: Station not found
+ *       400:
+ *         description: Bad request
+ */
+router.put("/:id", stationController.updateStation);
 
-// Update a station by ID
-router.put("/:id", async (req, res) => {
-  try {
-    const { name, distanceFromFort, line, latitude, longitude } = req.body;
-    const station = await Station.findByIdAndUpdate(
-      req.params.id,
-      { name, distanceFromFort, line, latitude, longitude },
-      { new: true, runValidators: true } // `new: true` returns the updated document
-    );
-    if (!station) return res.status(404).json({ message: "Station not found" });
-    res.json(station);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
-
-// Delete a station by ID
-router.delete("/:id", async (req, res) => {
-  try {
-    const station = await Station.findByIdAndDelete(req.params.id);
-    if (!station) return res.status(404).json({ message: "Station not found" });
-    res.json({ message: "Station deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
+/**
+ * @swagger
+ * /api/stations/{id}:
+ *   delete:
+ *     summary: Remove a station by ID
+ *     tags: [Stations]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The station ID
+ *     responses:
+ *       200:
+ *         description: The station was deleted
+ *       404:
+ *         description: Station not found
+ */
+router.delete("/:id", stationController.deleteStation);
 
 module.exports = router;
