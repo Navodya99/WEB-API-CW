@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 
 const trainSchema = new mongoose.Schema({
- trainId: {
+ trainName: {
    type: String,
    required: true,
  },
