@@ -6,10 +6,7 @@ const stationSchema = new mongoose.Schema({
    type: String,
    required: true,
  },
- distanceFromFort: {
-   type: Number,
-   required: true,
- },
+ 
  line: {
    type: String,
    enum: ["Main Line", "Puttalam Line", "Coastal Line", "Kalaniwali Line"],

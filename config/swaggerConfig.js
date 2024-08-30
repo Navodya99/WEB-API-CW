@@ -10,7 +10,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "http://localhost:8090",
+        url: "https://web-api-cw-production.up.railway.app",
       },
     ],
     components: {
