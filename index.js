@@ -7,7 +7,7 @@ const trainRoutes = require("./Routes/trainRoutes");
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 8090;
+const PORT = process.env.PORT || 8080;
 const cors = require("cors");
 app.use(cors());
 
